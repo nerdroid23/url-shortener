@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,5 +27,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Url extends Model
 {
-    //
+    protected $fillable = [
+        'original_url',
+        'shortened_url',
+    ];
+
+    protected static function booted(): void
+    {
+        static::creating(fn ($url) => $url->shortened_url = Str::random());
+    }
 }
