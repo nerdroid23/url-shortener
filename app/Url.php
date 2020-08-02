@@ -36,4 +36,9 @@ class Url extends Model
     {
         static::creating(fn ($url) => $url->shortened_url = Str::random());
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'shortened_url';
+    }
 }

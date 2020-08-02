@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Url;
 use App\Http\Requests\StoreUrlRequest;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Http\{JsonResponse, Response as ResponseCode};
+use Illuminate\Http\JsonResponse;
 
 class UrlController
 {
@@ -20,23 +20,20 @@ class UrlController
     {
         return Response::json(
             Url::create($request->validated())->only(['original_url', 'shortened_url']),
-            ResponseCode::HTTP_CREATED
+            JsonResponse::HTTP_CREATED
+        );
+    }
+
+    public function show(Url $url): JsonResponse
+    {
+        return Response::json(
+            $url->only(['original_url', 'shortened_url', 'visits', 'created_at']),
         );
     }
 
     public function destroy(Url $url): JsonResponse
     {
         $url->delete();
-        return Response::json(null, ResponseCode::HTTP_NO_CONTENT);
+        return Response::json(null, JsonResponse::HTTP_NO_CONTENT);
     }
-
-    /*public function show(Url $url): Response
-    {
-        //
-    }
-
-    public function update(StoreUrlRequest $request, Url $url): JsonResponse
-    {
-        //
-    }*/
 }
