@@ -37,10 +37,37 @@
 
                     <input
                       id="original_url"
+                      v-model="original_url"
+                      :class="{ 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red': hasErrors('original_url') }"
                       class="form-input block w-full pl-10 sm:text-sm sm:leading-5"
                       placeholder="http://example.com"
+                      required
                     >
+
+                    <div
+                      v-if="errors.original_url"
+                      class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                    >
+                      <svg
+                        class="h-5 w-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
                   </div>
+
+                  <p
+                    v-if="errors.original_url"
+                    id="original_url-error"
+                    class="mt-2 text-sm text-red-600"
+                    v-text="errors.original_url[0]"
+                  />
                 </div>
               </div>
             </div>
@@ -57,20 +84,61 @@
         </form>
       </div>
     </div>
+
+    <div class="mt-10">
+      <urls-list
+        v-if="urls.length"
+        :urls="urls"
+      />
+    </div>
   </content-section>
 </template>
 
 <script>
 import ContentSection from '../components/ContentSection';
+import UrlsList from '../components/UrlsList';
 
 export default {
   name: "IndexPage",
   metaInfo: { title: 'Dashboard' },
-  components: { ContentSection },
-  methods: {
-    submit() {
-      console.log('submitted')
+  components: { UrlsList, ContentSection },
+  data() {
+    return {
+      original_url: '',
+      errors: {},
+      urls: [],
     }
+  },
+  mounted() {
+    this.fetchUrls();
+  },
+  methods: {
+    fetchUrls() {
+      window.axios
+        .get(
+          this.route('urls.index').url()
+        )
+        .then(response => this.urls = response.data);
+    },
+    submit() {
+      window.axios
+        .post(
+          this.route('urls.store').url(),
+          { original_url: this.original_url }
+        )
+        .then(() => {
+          this.reset();
+          this.fetchUrls();
+        })
+        .catch(({response}) => this.errors = response.data.errors);
+    },
+    hasErrors(field) {
+      return Object.prototype.hasOwnProperty.call(this.errors, field);
+    },
+    reset() {
+      this.errors = {};
+      this.original_url = '';
+    },
   }
 }
 </script>

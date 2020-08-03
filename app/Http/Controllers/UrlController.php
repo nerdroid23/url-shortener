@@ -19,7 +19,7 @@ class UrlController
     public function store(StoreUrlRequest $request): JsonResponse
     {
         return Response::json(
-            Url::create($request->validated())->only(['original_url', 'shortened_url']),
+            Url::create($request->validated()),
             JsonResponse::HTTP_CREATED
         );
     }
