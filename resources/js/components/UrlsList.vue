@@ -72,6 +72,7 @@
                     href="#"
                     class="text-red-600 hover:text-red-900"
                     title="Delete"
+                    @click.prevent="$emit('delete', url)"
                   >
                     <svg
                       class="h-5 w-5"

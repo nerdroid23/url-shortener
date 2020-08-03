@@ -94,32 +94,56 @@
       v-if="urls.length"
       class="mt-10"
     >
-      <urls-list :urls="urls" />
+      <urls-list
+        :urls="urls"
+        @delete="confirmDelete"
+      />
     </div>
+
+    <modal
+      v-if="showModal"
+      title="Deactivate Account"
+      body="Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
+      confirm-button="Yes"
+      cancel-button="Cancel"
+      @cancel="showModal = false"
+      @confirm="destroy"
+    />
   </content-section>
 </template>
 
 <script>
 import ContentSection from '../components/ContentSection';
 import UrlsList from '../components/UrlsList';
+import Modal from '../components/Modal';
 
 export default {
   name: "IndexPage",
   metaInfo: { title: 'Dashboard' },
-  components: { UrlsList, ContentSection },
+  components: { Modal, UrlsList, ContentSection },
   data() {
     return {
       original_url: '',
       errors: {},
       urls: [],
       submitted: false,
-      success: false
+      success: false,
+      showModal: false,
+      urlToDelete: {},
     }
   },
   mounted() {
     this.fetchUrls();
   },
   methods: {
+    confirmDelete(item) {
+      this.showModal = true;
+      this.urlToDelete = item;
+    },
+    destroy() {
+      console.log(`deleting item with id of ${this.urlToDelete.id}`);
+      this.showModal = false;
+    },
     fetchUrls() {
       window.axios
         .get(
