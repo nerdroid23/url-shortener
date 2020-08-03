@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="mt-5 md:mt-0 md:col-span-2">
-        <form @submit.prevent="submit">
+        <form @submit.prevent="store">
           <div class="shadow sm:rounded-md sm:overflow-hidden">
             <div class="px-4 py-5 bg-white sm:p-6 space-y-6">
               <div class="grid grid-cols-3 gap-6">
@@ -73,6 +73,11 @@
             </div>
 
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <span
+                v-if="success"
+                class="animate-pulse text-green-500 mr-5"
+              >Success!</span>
+
               <span class="inline-flex rounded-md shadow-sm">
                 <button
                   type="submit"
@@ -85,11 +90,11 @@
       </div>
     </div>
 
-    <div class="mt-10">
-      <urls-list
-        v-if="urls.length"
-        :urls="urls"
-      />
+    <div
+      v-if="urls.length"
+      class="mt-10"
+    >
+      <urls-list :urls="urls" />
     </div>
   </content-section>
 </template>
@@ -107,6 +112,8 @@ export default {
       original_url: '',
       errors: {},
       urls: [],
+      submitted: false,
+      success: false
     }
   },
   mounted() {
@@ -120,17 +127,9 @@ export default {
         )
         .then(response => this.urls = response.data);
     },
-    submit() {
-      window.axios
-        .post(
-          this.route('urls.store').url(),
-          { original_url: this.original_url }
-        )
-        .then(() => {
-          this.reset();
-          this.fetchUrls();
-        })
-        .catch(({response}) => this.errors = response.data.errors);
+    flashSuccess() {
+      this.success = !this.success;
+      setTimeout(() => this.success = !this.success, 3000);
     },
     hasErrors(field) {
       return Object.prototype.hasOwnProperty.call(this.errors, field);
@@ -138,6 +137,26 @@ export default {
     reset() {
       this.errors = {};
       this.original_url = '';
+    },
+    store() {
+      if (this.submitted || this.original_url === '') {
+        return;
+      }
+
+      this.submitted = true;
+
+      window.axios
+        .post(
+          this.route('urls.store').url(),
+          { original_url: this.original_url }
+        )
+        .then((response) => {
+          this.reset();
+          this.urls.unshift(response.data);
+          this.flashSuccess();
+        })
+        .catch(({response}) => this.errors = response.data.errors)
+        .finally(() => this.submitted = false);
     },
   }
 }

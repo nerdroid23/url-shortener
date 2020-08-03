@@ -8,15 +8,15 @@
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Original URL
               </th>
+
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Shortened URL
               </th>
+
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                # Of Visits
-              </th>
+
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Shortened On
               </th>
@@ -46,20 +46,44 @@
               </td>
 
               <td
-                class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500 text-center"
-                v-text="url.visits"
-              />
-
-              <td
                 class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500"
-                v-text="formatDate(url.created_at)"
+                v-text="url.created_at"
               />
 
               <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                <a
-                  href="#"
-                  class="text-indigo-600 hover:text-indigo-900"
-                >Edit</a>
+                <div class="flex justify-between">
+                  <a
+                    href="#"
+                    class="text-indigo-600 hover:text-indigo-900"
+                    title="Edit"
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    ><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-red-600 hover:text-red-900"
+                    title="Delete"
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    ><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  </a>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -78,12 +102,6 @@ export default {
       default() {
         return []
       }
-    }
-  },
-  methods: {
-    formatDate(date) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return (new Date(date)).toLocaleDateString('en-US', options);
     }
   },
 }

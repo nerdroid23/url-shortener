@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -35,6 +36,11 @@ class Url extends Model
     protected static function booted(): void
     {
         static::creating(fn ($url) => $url->shortened_url = Str::random());
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->diffForHumans();
     }
 
     public function getRouteKeyName(): string
