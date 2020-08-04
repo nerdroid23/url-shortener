@@ -6,11 +6,17 @@ mix.js('resources/js/app.js', 'public/js/app.js')
   .sass('resources/sass/app.scss', 'public/css/app.css')
   .tailwind('./tailwind.config.js')
   .webpackConfig({
+    output: {
+      chunkFilename: 'js/[name].js?id=[chunkhash]'
+    },
     resolve: {
       alias: {
         ziggy: path.resolve('vendor/tightenco/ziggy/src/js/route.js'),
       },
     },
+  })
+  .babelConfig({
+    plugins: ['@babel/plugin-syntax-dynamic-import'],
   });
 
 if (mix.inProduction()) {

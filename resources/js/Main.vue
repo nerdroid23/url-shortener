@@ -3,7 +3,7 @@
     <app-header />
 
     <section class="flex-grow">
-      <index-page />
+      <router-view />
     </section>
 
     <app-footer />
@@ -13,10 +13,10 @@
 <script>
 import AppHeader from './layouts/Header';
 import AppFooter from './layouts/Footer';
-import IndexPage from './pages/Index';
+
 
 export default {
   name: "App",
-  components: { IndexPage, AppFooter, AppHeader }
+  components: { AppFooter, AppHeader }
 }
 </script>

@@ -34,13 +34,13 @@
                 v-text="url.original_url"
               />
 
-              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-green-500">
+              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium">
                 <a
-                  :href="url.shortened_url"
+                  :href="url.redirect_path"
                   target="_blank"
-                  class="flex focus:border-none"
+                  class="flex"
                 >
-                  <span class="mr-3 text-gray-900">
+                  <span class="mr-3 text-gray-500 hover:text-gray-900">
                     <svg
                       class="h-5 w-5"
                       fill="none"
@@ -52,7 +52,10 @@
                     ><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                   </span>
 
-                  <span v-text="url.shortened_url" />
+                  <span
+                    class="text-green-500 hover:text-green-900"
+                    v-text="url.shortened_url"
+                  />
                 </a>
               </td>
 

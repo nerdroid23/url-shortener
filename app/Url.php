@@ -33,6 +33,10 @@ class Url extends Model
         'shortened_url',
     ];
 
+    protected $appends = [
+        'redirect_path'
+    ];
+
     protected static function booted(): void
     {
         static::creating(fn ($url) => $url->shortened_url = Str::random(6));
@@ -46,5 +50,10 @@ class Url extends Model
     public function getRouteKeyName(): string
     {
         return 'shortened_url';
+    }
+
+    public function getRedirectPathAttribute()
+    {
+        return url("u/{$this->shortened_url}");
     }
 }
