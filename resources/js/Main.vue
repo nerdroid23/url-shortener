@@ -1,22 +1,19 @@
 <template>
-  <div class="flex flex-col min-h-screen">
-    <app-header />
-
-    <section class="flex-grow">
-      <router-view />
-    </section>
-
-    <app-footer />
-  </div>
+  <transition
+    mode="out-in"
+    enter-active-class="ease-out duration-300"
+    enter-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    enter-to-class="opacity-100 translate-y-0 sm:scale-100"
+    leave-active-class="ease-in duration-200"
+    leave-class="opacity-100 translate-y-0 sm:scale-100"
+    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+  >
+    <router-view />
+  </transition>
 </template>
 
 <script>
-import AppHeader from './layouts/Header';
-import AppFooter from './layouts/Footer';
-
-
 export default {
   name: "App",
-  components: { AppFooter, AppHeader }
 }
 </script>
