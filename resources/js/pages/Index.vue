@@ -100,15 +100,18 @@
       />
     </div>
 
-    <modal
-      v-if="showModal"
-      title="Deactivate Account"
-      body="Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
-      confirm-button="Yes"
-      cancel-button="Cancel"
-      @cancel="showModal = false"
-      @confirm="destroy"
-    />
+    <portal selector="#portal-target">
+      <modal
+        v-if="showModal"
+        :show="showModal"
+        title="Delete URL"
+        body="Are you sure you want to delete this URL? This action cannot be undone."
+        confirm-button="Yes"
+        cancel-button="Cancel"
+        @cancel="toggleModal"
+        @confirm="destroy"
+      />
+    </portal>
   </content-section>
 </template>
 
@@ -116,11 +119,12 @@
 import ContentSection from '../components/ContentSection';
 import UrlsList from '../components/UrlsList';
 import Modal from '../components/Modal';
+import { Portal } from '@linusborg/vue-simple-portal';
 
 export default {
   name: "IndexPage",
   metaInfo: { title: 'Dashboard' },
-  components: { Modal, UrlsList, ContentSection },
+  components: { Portal, Modal, UrlsList, ContentSection },
   data() {
     return {
       original_url: '',
@@ -137,18 +141,20 @@ export default {
   },
   methods: {
     confirmDelete(item) {
-      this.showModal = true;
+      this.toggleModal();
       this.urlToDelete = item;
     },
     destroy() {
-      console.log(`deleting item with id of ${this.urlToDelete.id}`);
-      this.showModal = false;
+      window.axios
+        .delete(this.route('urls.destroy', this.urlToDelete.shortened_url).url())
+        .then(() => this.urls = this.urls.filter(url => url.id !== this.urlToDelete.id))
+        .finally(() => this.urlToDelete = {});
+
+      this.toggleModal();
     },
     fetchUrls() {
       window.axios
-        .get(
-          this.route('urls.index').url()
-        )
+        .get(this.route('urls.index').url())
         .then(response => this.urls = response.data);
     },
     flashSuccess() {
@@ -181,6 +187,9 @@ export default {
         })
         .catch(({response}) => this.errors = response.data.errors)
         .finally(() => this.submitted = false);
+    },
+    toggleModal() {
+      this.showModal = !this.showModal;
     },
   }
 }

@@ -51,7 +51,7 @@
               />
 
               <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                <div class="flex justify-between">
+                <div class="flex space-x-3 md:space-x-6">
                   <a
                     href="#"
                     class="text-indigo-600 hover:text-indigo-900"

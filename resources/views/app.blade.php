@@ -22,5 +22,7 @@
   <div id="app">
     <app-component />
   </div>
+
+  <div id="portal-target"></div>
 </body>
 </html>
