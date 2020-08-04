@@ -110,7 +110,11 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit() {
+      this.form
+        .post(this.route('login').url())
+        .then(() => (window.location = '/'));
+    },
   },
 }
 </script>

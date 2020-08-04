@@ -16,6 +16,10 @@
   <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
 
   <!-- Scripts -->
+  <script>
+    window.loggedIn = @json(auth()->check());
+    window.user = @json(auth()->user()->only(['name', 'email']));
+  </script>
   <script src="{{ url(mix('js/app.js')) }}" defer></script>
 </head>
 <body class="bg-gray-100">

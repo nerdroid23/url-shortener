@@ -136,7 +136,11 @@ export default {
     }
   },
   methods: {
-    submit() {},
+    submit() {
+      this.form
+        .post(this.route('register').url())
+        .then(() => (window.location = '/'));
+    },
   },
 }
 </script>
