@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Url;
-use App\Http\Requests\StoreUrlRequest;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreUrlRequest;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 
 class UrlController
 {
@@ -24,8 +25,18 @@ class UrlController
         );
     }
 
-    public function show(Url $url): JsonResponse
+    /**
+     * @param \App\Url $url
+     *
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function show(Url $url)
     {
+        if (!Request::ajax()) {
+            $url->increment('visits');
+            return Response::redirectTo($url->original_url);
+        }
+
         return Response::json(
             $url->only(['original_url', 'shortened_url', 'visits', 'created_at']),
         );

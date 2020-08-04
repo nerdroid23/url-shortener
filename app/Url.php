@@ -35,7 +35,7 @@ class Url extends Model
 
     protected static function booted(): void
     {
-        static::creating(fn ($url) => $url->shortened_url = Str::random());
+        static::creating(fn ($url) => $url->shortened_url = Str::random(6));
     }
 
     public function getCreatedAtAttribute($value)

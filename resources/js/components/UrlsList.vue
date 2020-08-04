@@ -14,7 +14,7 @@
               </th>
 
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                # of Visits
               </th>
 
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -34,16 +34,32 @@
                 v-text="url.original_url"
               />
 
-              <td
-                class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-green-500"
-                v-text="url.shortened_url"
-              />
+              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium text-green-500">
+                <a
+                  :href="url.shortened_url"
+                  target="_blank"
+                  class="flex focus:border-none"
+                >
+                  <span class="mr-3 text-gray-900">
+                    <svg
+                      class="h-5 w-5"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    ><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  </span>
 
-              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  Active
-                </span>
+                  <span v-text="url.shortened_url" />
+                </a>
               </td>
+
+              <td
+                class="px-6 py-4 whitespace-no-wrap text-sm leading-5"
+                v-text="url.visits"
+              />
 
               <td
                 class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500"
