@@ -10,7 +10,7 @@
       leave-to-class="opacity-0"
     >
       <div
-        v-if="show"
+        v-if="visible"
         class="fixed inset-0 transition-opacity"
       >
         <div class="absolute inset-0 bg-gray-500 opacity-75" />
@@ -28,7 +28,7 @@
       @after-leave="$emit(decision)"
     >
       <div
-        v-if="show"
+        v-if="visible"
         class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full"
         role="dialog"
         aria-modal="true"
@@ -100,12 +100,13 @@ export default {
   props: ['title', 'body', 'cancelButton', 'confirmButton', 'show'],
   data() {
     return {
-      decision: ''
+      decision: '',
+      visible: this.show
     }
   },
   methods: {
     dismiss(decision) {
-      this.show = false;
+      this.visible = false;
       this.decision = decision;
     }
   },

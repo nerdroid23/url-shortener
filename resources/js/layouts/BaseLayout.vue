@@ -3,7 +3,9 @@
     <app-header />
 
     <section class="flex-grow">
-      <slot />
+      <content-section>
+        <slot />
+      </content-section>
     </section>
 
     <app-footer />
@@ -13,9 +15,10 @@
 <script>
 import AppHeader from './Header';
 import AppFooter from './Footer';
+import ContentSection from '../components/ContentSection';
 
 export default {
   name: "BaseLayout",
-  components: { AppFooter, AppHeader }
+  components: { ContentSection, AppFooter, AppHeader }
 }
 </script>
