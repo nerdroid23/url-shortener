@@ -18,7 +18,7 @@
   <!-- Scripts -->
   <script>
     window.loggedIn = @json(auth()->check());
-    window.user = @json(auth()->user()->only(['name', 'email']));
+    window.user = @json(optional(auth()->user())->only(['name', 'email']));
   </script>
   <script src="{{ url(mix('js/app.js')) }}" defer></script>
 </head>
