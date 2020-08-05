@@ -71,10 +71,7 @@
       </div>
     </div>
 
-    <div
-      v-if="urls.length"
-      class="mt-10"
-    >
+    <div class="mt-10">
       <urls-list
         :urls="urls"
         @delete="confirmDelete"
@@ -103,6 +100,7 @@ import { Portal } from '@linusborg/vue-simple-portal';
 import BaseLayout from '../layouts/BaseLayout';
 import Form from 'form-backend-validation';
 import Icon from '../components/Icon';
+
 
 export default {
   name: 'IndexPage',
@@ -142,10 +140,6 @@ export default {
       this.success = this.form.successful;
       setTimeout(() => this.success = !this.success, 3000);
     },
-    reset() {
-      this.form.reset();
-      this.form.errors.clear();
-    },
     store() {
       if (this.form.processing || this.form.original_url === '') {
         return;
@@ -154,7 +148,8 @@ export default {
       this.form
         .post(this.route('urls.store').url())
         .then((data) => {
-          this.reset();
+          data['visits'] = 0;
+
           this.urls.unshift(data);
           this.flashSuccess();
         });

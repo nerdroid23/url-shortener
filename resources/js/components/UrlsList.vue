@@ -20,7 +20,7 @@
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Shortened On
               </th>
-              <th class="px-6 py-3 bg-gray-50" />
+              <th class="px-11 py-3 bg-gray-50 text-center" />
             </tr>
           </thead>
           <tbody>
@@ -54,7 +54,7 @@
               </td>
 
               <td
-                class="px-6 py-4 whitespace-no-wrap text-sm leading-5"
+                class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500"
                 v-text="url.visits"
               />
 
@@ -63,7 +63,7 @@
                 v-text="url.created_at"
               />
 
-              <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+              <td class="px-6 py-4 whitespace-no-wrap">
                 <div class="flex space-x-3 md:space-x-6">
                   <a
                     href="#"
@@ -92,6 +92,13 @@
             </tr>
           </tbody>
         </table>
+
+        <div
+          v-if="!urls.length"
+          class="text-center text-gray-500 py-5"
+        >
+          You haven't shortened any URLs yet.
+        </div>
       </div>
     </div>
   </div>

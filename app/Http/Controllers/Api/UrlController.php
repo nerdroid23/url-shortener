@@ -12,15 +12,15 @@ class UrlController
 {
     public function index(): JsonResponse
     {
-        return Response::json(
-            Url::query()->orderByDesc('created_at')->get()
+        return response()->json(
+            auth()->user()->urls
         );
     }
 
     public function store(StoreUrlRequest $request): JsonResponse
     {
-        return Response::json(
-            Url::create($request->validated()),
+        return response()->json(
+            auth()->user()->urls()->create($request->validated()),
             JsonResponse::HTTP_CREATED
         );
     }
@@ -32,19 +32,19 @@ class UrlController
      */
     public function show(Url $url)
     {
-        if (!Request::ajax()) {
-            $url->increment('visits');
-            return Response::redirectTo($url->original_url);
+        if (request()->wantsJson()) {
+            return response()->json(
+                $url->only(['original_url', 'shortened_url', 'visits', 'created_at']),
+            );
         }
 
-        return Response::json(
-            $url->only(['original_url', 'shortened_url', 'visits', 'created_at']),
-        );
+        $url->increment('visits');
+        return Response::redirectTo($url->original_url);
     }
 
     public function destroy(Url $url): JsonResponse
     {
         $url->delete();
-        return Response::json(null, JsonResponse::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
