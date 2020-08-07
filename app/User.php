@@ -2,9 +2,11 @@
 
 namespace App;
 
+use Illuminate\Support\Arr;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 
 /**
  * App\User
@@ -44,7 +46,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -53,7 +57,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -68,5 +73,17 @@ class User extends Authenticatable
     public function urls()
     {
         return $this->hasMany(Url::class)->orderByDesc('created_at');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        ResetPasswordNotification::createUrlUsing(function () use ($token) {
+            return url('password/reset', null, false) . '?' . Arr::query([
+                    'token' => $token,
+                    'email' => $this->getEmailForPasswordReset(),
+                ]);
+        });
+
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

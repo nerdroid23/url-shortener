@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ './pages/Login'),
+    component: () => import(/* webpackChunkName: "login" */ './pages/auth/Login'),
     meta: {
       middleware: 'guest'
     }
@@ -23,7 +23,23 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: () => import(/* webpackChunkName: "register" */ './pages/Register'),
+    component: () => import(/* webpackChunkName: "register" */ './pages/auth/Register'),
+    meta: {
+      middleware: 'guest'
+    }
+  },
+  {
+    path: '/password/email',
+    name: 'forgot-password',
+    component: () => import(/* webpackChunkName: "forgot-password" */ './pages/auth/ForgotPassword'),
+    meta: {
+      middleware: 'guest'
+    }
+  },
+  {
+    path: '/password/reset',
+    name: 'reset-password',
+    component: () => import(/* webpackChunkName: "reset-password" */ './pages/auth/ResetPassword'),
     meta: {
       middleware: 'guest'
     }
