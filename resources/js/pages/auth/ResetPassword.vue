@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import AuthLayout from '../../layouts/AuthLayout';
+import AuthLayout from '@/layouts/AuthLayout';
 import Form from 'form-backend-validation';
 
 export default {

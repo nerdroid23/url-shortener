@@ -24,6 +24,14 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="urls.length === 0">
+              <td
+                class="text-center text-gray-500 border-t py-3"
+                colspan="5"
+              >
+                You haven't shortened any URLs yet.
+              </td>
+            </tr>
             <tr
               v-for="(url, index) in urls"
               :key="url.id"
@@ -34,7 +42,7 @@
                 v-text="url.original_url"
               />
 
-              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium">
+              <td class="flex px-6 py-4 whitespace-no-wrap text-sm leading-5 font-medium">
                 <a
                   :href="url.redirect_path"
                   target="_blank"
@@ -46,11 +54,14 @@
                       class="h-5 w-5"
                     />
                   </span>
-                  <span
-                    class="text-green-500 hover:text-green-900"
-                    v-text="url.shortened_url"
-                  />
                 </a>
+
+                <span
+                  class="text-green-500 hover:text-green-900 cursor-pointer js-copy-to-clipboard"
+                  v-text="url.shortened_url"
+                />
+
+                <span class="hidden">{{ url.redirect_path }}</span>
               </td>
 
               <td
@@ -92,13 +103,6 @@
             </tr>
           </tbody>
         </table>
-
-        <div
-          v-if="!urls.length"
-          class="text-center text-gray-500 py-5"
-        >
-          You haven't shortened any URLs yet.
-        </div>
       </div>
     </div>
   </div>
@@ -106,6 +110,8 @@
 
 <script>
 import Icon from './Icon';
+import ClipboardJS from 'clipboard';
+
 export default {
   name: "UrlsList",
   components: { Icon },
@@ -116,6 +122,22 @@ export default {
         return []
       }
     }
+  },
+  data() {
+    return {
+      clipboard: null,
+      copied: false
+    };
+  },
+  mounted() {
+    this.clipboard = new ClipboardJS('.js-copy-to-clipboard', {
+      text: function(trigger) {
+        return trigger.nextElementSibling.innerHTML;
+      }
+    });
+  },
+  beforeDestroy() {
+    this.clipboard.destroy();
   },
 }
 </script>

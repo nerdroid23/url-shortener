@@ -94,12 +94,12 @@
 </template>
 
 <script>
-import UrlsList from '../components/UrlsList';
-import Modal from '../components/Modal';
+import UrlsList from '@/components/UrlsList';
+import Modal from '@/components/Modal';
 import { Portal } from '@linusborg/vue-simple-portal';
-import BaseLayout from '../layouts/BaseLayout';
+import BaseLayout from '@/layouts/BaseLayout';
 import Form from 'form-backend-validation';
-import Icon from '../components/Icon';
+import Icon from '@/components/Icon';
 
 
 export default {
