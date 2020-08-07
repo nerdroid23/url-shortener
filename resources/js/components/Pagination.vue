@@ -1,9 +1,13 @@
 <template>
-  <nav class="border-t border-gray-200 px-4 flex items-center justify-between sm:px-0">
+  <nav
+    v-if="hasMoreThanOnePage"
+    class="border-t border-gray-200 px-4 flex items-center justify-between sm:px-0"
+  >
     <div class="w-0 flex-1 flex">
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-3 pl-4 pr-1 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
+      <router-link
+        v-if="prevPage.url"
+        :to="prevPage.url"
+        class="-mt-px border-t-2 border-transparent py-4 pl-4 pr-1 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
       >
         <svg
           class="mr-3 h-5 w-5 text-gray-400"
@@ -16,58 +20,34 @@
             clip-rule="evenodd"
           />
         </svg>
-        Previous
-      </a>
+        {{ prevPage.label }}
+      </router-link>
     </div>
 
     <div class="hidden md:flex">
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
-      >
-        1
-      </a>
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-indigo-500 py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-indigo-600 focus:outline-none focus:text-indigo-800 focus:border-indigo-700 transition ease-in-out duration-150"
-      >
-        2
-      </a>
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
-      >
-        3
-      </a>
-      <span class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500">
-        ...
-      </span>
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
-      >
-        8
-      </a>
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
-      >
-        9
-      </a>
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-4 px-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
-      >
-        10
-      </a>
+      <template v-for="(link, key) in links">
+        <router-link
+          v-if="isNotPrevOrNextPage(link.label)"
+          :key="key"
+          :to="{ name: 'dashboard', query:{ page: link.label } }"
+          :class="{
+            'border-indigo-500 text-indigo-600 focus:text-indigo-800 focus:border-indigo-700': link.active,
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-400': !link.active
+          }"
+          class="-mt-px border-t-2 py-4 px-4 inline-flex items-center text-sm leading-5 font-medium focus:outline-none transition ease-in-out duration-150"
+        >
+          {{ link.label }}
+        </router-link>
+      </template>
     </div>
 
     <div class="w-0 flex-1 flex justify-end">
-      <a
-        href="#"
-        class="-mt-px border-t-2 border-transparent py-3 pr-4 pl-1 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
+      <router-link
+        v-if="nextPage.url"
+        :to="nextPage.url"
+        class="-mt-px border-t-2 border-transparent py-4 pr-4 pl-1 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-400 transition ease-in-out duration-150"
       >
-        Next
+        {{ nextPage.label }}
         <svg
           class="ml-3 h-5 w-5 text-gray-400"
           viewBox="0 0 20 20"
@@ -79,7 +59,7 @@
             clip-rule="evenodd"
           />
         </svg>
-      </a>
+      </router-link>
     </div>
   </nav>
 </template>
@@ -88,7 +68,28 @@
 export default {
   name: "Pagination",
   props: {
-    links: Array,
+    links: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
+  computed: {
+    hasMoreThanOnePage() {
+      return this.links.length > 3;
+    },
+    prevPage() {
+      return this.links[0];
+    },
+    nextPage() {
+      return this.links[this.links.length - 1];
+    },
+  },
+  methods: {
+    isNotPrevOrNextPage(label) {
+      return typeof label !== 'string';
+    }
   },
 }
 </script>

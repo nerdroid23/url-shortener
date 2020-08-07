@@ -103,7 +103,8 @@
             </tr>
           </tbody>
         </table>
-        <pagination />
+
+        <slot name="pagination" />
       </div>
     </div>
   </div>
@@ -112,16 +113,15 @@
 <script>
 import Icon from './Icon';
 import ClipboardJS from 'clipboard';
-import Pagination from './Pagination';
 
 export default {
   name: "UrlsList",
-  components: { Pagination, Icon },
+  components: { Icon },
   props: {
     urls: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     }
   },

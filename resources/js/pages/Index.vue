@@ -73,9 +73,13 @@
 
     <div class="mt-10">
       <urls-list
-        :urls="urls"
+        :urls="urls.data"
         @delete="confirmDelete"
-      />
+      >
+        <template v-slot:pagination>
+          <pagination :links="urls.links" />
+        </template>
+      </urls-list>
     </div>
 
     <portal selector="#portal-target">
@@ -100,12 +104,13 @@ import { Portal } from '@linusborg/vue-simple-portal';
 import BaseLayout from '@/layouts/BaseLayout';
 import Form from 'form-backend-validation';
 import Icon from '@/components/Icon';
+import Pagination from '../components/Pagination';
 
 
 export default {
   name: 'IndexPage',
   metaInfo: { title: 'Dashboard' },
-  components: { Icon, BaseLayout, Portal, Modal, UrlsList },
+  components: { Pagination, Icon, BaseLayout, Portal, Modal, UrlsList },
   data() {
     return {
       form: new Form({ original_url: '' }),
@@ -113,6 +118,11 @@ export default {
       success: null,
       showModal: false,
       urlToDelete: {},
+    }
+  },
+  watch: {
+    '$route.query.page'() {
+      this.fetchUrls();
     }
   },
   mounted() {
@@ -131,10 +141,13 @@ export default {
 
       this.toggleModal();
     },
-    fetchUrls() {
+    fetchUrls(page = 1) {
+      const query = this.$route.query.page || null;
+      page = query ? query : page;
+
       window.axios
-        .get(this.route('urls.index').url())
-        .then(response => this.urls = response.data);
+        .get(this.route('urls.index', { page }).url())
+        .then(response => (this.urls = response.data));
     },
     flashSuccess() {
       this.success = this.form.successful;

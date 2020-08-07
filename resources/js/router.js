@@ -48,7 +48,6 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  linkActiveClass: 'border-indigo-500 text-gray-900 focus:outline-none focus:border-indigo-700',
   routes
 })
 
