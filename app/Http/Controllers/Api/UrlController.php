@@ -13,7 +13,7 @@ class UrlController
     public function index(): JsonResponse
     {
         return response()->json(
-            auth()->user()->urls
+            auth()->user()->urls()->paginate(3)
         );
     }
 
