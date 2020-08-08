@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $user_id
+ * @property string|null $title
  * @property string|null $original_url
  * @property string|null $shortened_url
  * @property int|null $visits
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereOriginalUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereShortenedUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Url whereVisits($value)
@@ -32,8 +34,8 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $fillable = [
-        'user_id',
         'original_url',
+        'title'
     ];
 
     protected $appends = [

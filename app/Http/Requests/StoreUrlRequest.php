@@ -20,7 +20,8 @@ class StoreUrlRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'original_url' => ['required', 'starts_with:https://,http://', 'active_url']
+            'original_url' => ['required', 'starts_with:https://,http://', 'active_url'],
+            'title' => ['required', 'min:3'],
         ];
     }
 }

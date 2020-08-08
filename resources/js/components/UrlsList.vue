@@ -6,6 +6,10 @@
           <thead>
             <tr>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                Title
+              </th>
+
+              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Original URL
               </th>
 
@@ -37,6 +41,11 @@
               :key="url.id"
               :class="{ 'bg-white': index % 2 === 0, 'bg-gray-50': index % 2 === 1 }"
             >
+              <td
+                class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900 font-medium"
+                v-text="url.title"
+              />
+
               <td
                 class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900"
                 v-text="url.original_url"

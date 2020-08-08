@@ -21,6 +21,37 @@
               <div class="grid grid-cols-3 gap-6">
                 <div class="col-span-3 sm:col-span-2">
                   <label
+                    for="title"
+                    class="block text-sm font-medium leading-5 text-gray-700"
+                  >Title</label>
+
+                  <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <icon
+                        name="document-add"
+                        class="h-5 w-5 text-gray-400"
+                      />
+                    </div>
+
+                    <input
+                      id="title"
+                      v-model="form.title"
+                      :class="{ 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:shadow-outline-red': form.errors.has('title') }"
+                      class="form-input block w-full pl-10 sm:text-sm sm:leading-5"
+                      placeholder="🔥 youtube video i saw today"
+                      required
+                    >
+                  </div>
+
+                  <p
+                    v-if="form.errors.has('title')"
+                    class="mt-2 text-sm text-red-600"
+                    v-text="form.getError('title')"
+                  />
+                </div>
+
+                <div class="col-span-3 sm:col-span-2">
+                  <label
                     for="original_url"
                     class="block text-sm font-medium leading-5 text-gray-700"
                   >Website URL</label>
@@ -113,7 +144,10 @@ export default {
   components: { Pagination, Icon, BaseLayout, Portal, Modal, UrlsList },
   data() {
     return {
-      form: new Form({ original_url: '' }),
+      form: new Form({
+        original_url: '',
+        title: '',
+      }),
       urls: [],
       success: null,
       showModal: false,
@@ -136,8 +170,10 @@ export default {
     destroy() {
       this.form
         .delete(this.route('urls.destroy', this.urlToDelete.shortened_url).url())
-        .then(() => this.urls = this.urls.filter(url => url.id !== this.urlToDelete.id))
-        .finally(() => this.urlToDelete = {});
+        .then(() => {
+          this.urls.data = this.urls.data.filter(url => url.id !== this.urlToDelete.id);
+        })
+        .finally(() => (this.urlToDelete = {}));
 
       this.toggleModal();
     },
@@ -163,7 +199,7 @@ export default {
         .then((data) => {
           data['visits'] = 0;
 
-          this.urls.unshift(data);
+          this.urls.data.unshift(data);
           this.flashSuccess();
         });
     },

@@ -16,6 +16,7 @@ class CreateUrlsTable extends Migration
         Schema::create('urls', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('title')->nullable();
             $table->text('original_url')->nullable();
             $table->string('shortened_url')->unique()->nullable();
             $table->unsignedBigInteger('visits')->default(0)->nullable();
