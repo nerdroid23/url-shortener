@@ -11,7 +11,7 @@
           <button
             type="button"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out"
-            @click="togglePanel"
+            @click="openCreatePanel"
           >
             New
           </button>
@@ -20,62 +20,31 @@
     </div>
 
     <div class="mt-10">
-      <UrlsList
-        :urls="urls.data"
-        @delete="confirmDelete"
-      >
-        <template v-slot:pagination>
-          <Pagination :links="urls.links" />
-        </template>
-      </UrlsList>
+      <UrlsList :initialdata="urls" />
     </div>
 
     <Portal selector="#portal-target">
-      <Modal
-        v-if="showModal"
-        :show="showModal"
-        title="Delete URL"
-        body="Are you sure you want to delete this URL? This action cannot be undone."
-        confirm-button="Yes"
-        cancel-button="Cancel"
-        @confirm="destroy"
-        @cancel="toggleModal"
-      />
+      <DeleteUrlModal />
 
-      <SlideOverPanel
-        v-if="showPanel"
-        :show="showPanel"
-        @closepanel="togglePanel"
-      />
+      <CreateUrlPanel />
     </Portal>
   </BaseLayout>
 </template>
 
 <script>
 import UrlsList from '@/components/UrlsList';
-import Modal from '@/components/Modal';
+import DeleteUrlModal from '@/components/DeleteUrlModal';
 import { Portal } from '@linusborg/vue-simple-portal';
 import BaseLayout from '@/layouts/BaseLayout';
-import Form from 'form-backend-validation';
-import Pagination from '../components/Pagination';
-import SlideOverPanel from '../components/SlideOverPanel';
-
+import CreateUrlPanel from '@/components/CreateUrlPanel';
 
 export default {
   name: 'IndexPage',
   metaInfo: { title: 'Dashboard' },
-  components: { SlideOverPanel, Pagination, BaseLayout, Portal, Modal, UrlsList },
+  components: { CreateUrlPanel, BaseLayout, Portal, DeleteUrlModal, UrlsList },
   data() {
     return {
-      form: new Form({
-        original_url: '',
-        title: '',
-      }),
-      urls: [],
-      success: null,
-      showModal: false,
-      showPanel: false,
-      urlToDelete: {},
+      urls: {},
     }
   },
   watch: {
@@ -85,22 +54,10 @@ export default {
   },
   mounted() {
     this.fetchUrls();
+    EventBus.listen('deleted-url', () => this.fetchUrls());
+    EventBus.listen('created-url', () => this.fetchUrls());
   },
   methods: {
-    confirmDelete(item) {
-      this.toggleModal();
-      this.urlToDelete = item;
-    },
-    destroy() {
-      this.form
-        .delete(this.route('urls.destroy', this.urlToDelete.shortened_url).url())
-        .then(() => {
-          this.urls.data = this.urls.data.filter(url => url.id !== this.urlToDelete.id);
-        })
-        .finally(() => (this.urlToDelete = {}));
-
-      this.toggleModal();
-    },
     fetchUrls(page = 1) {
       const query = this.$route.query.page || null;
       page = query ? query : page;
@@ -109,29 +66,8 @@ export default {
         .get(this.route('urls.index', { page }).url())
         .then(response => (this.urls = response.data));
     },
-    flashSuccess() {
-      this.success = this.form.successful;
-      setTimeout(() => this.success = !this.success, 3000);
-    },
-    store() {
-      if (this.form.processing || this.form.original_url === '') {
-        return;
-      }
-
-      this.form
-        .post(this.route('urls.store').url())
-        .then((data) => {
-          data['visits'] = 0;
-
-          this.urls.data.unshift(data);
-          this.flashSuccess();
-        });
-    },
-    toggleModal() {
-      this.showModal = !this.showModal;
-    },
-    togglePanel() {
-      this.showPanel = !this.showPanel;
+    openCreatePanel() {
+      EventBus.fire('open-create-panel');
     },
   }
 }

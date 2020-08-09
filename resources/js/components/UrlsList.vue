@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="urls.length === 0">
+            <tr v-if="!urls">
               <td
                 class="text-center text-gray-500 border-t py-3"
                 colspan="5"
@@ -100,7 +100,7 @@
                     href="#"
                     class="text-red-600 hover:text-red-900"
                     title="Delete"
-                    @click.prevent="$emit('delete', url)"
+                    @click.prevent="triggerDeletion(url)"
                   >
                     <icon
                       name="trash"
@@ -113,32 +113,34 @@
           </tbody>
         </table>
 
-        <slot name="pagination" />
+        <Pagination :links="links" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Icon from './Icon';
+import Icon from '@/components/Icon';
+import Pagination from '@/components/Pagination';
 import ClipboardJS from 'clipboard';
 
 export default {
   name: "UrlsList",
-  components: { Icon },
-  props: {
-    urls: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
+  components: { Pagination, Icon },
+  props: ['initialdata'],
   data() {
     return {
       clipboard: null,
-      copied: false
+      copied: false,
     };
+  },
+  computed: {
+    urls: function () {
+      return this.initialdata.data;
+    },
+    links: function () {
+      return this.initialdata.links;
+    },
   },
   mounted() {
     this.clipboard = new ClipboardJS('.js-copy-to-clipboard', {
@@ -150,5 +152,10 @@ export default {
   beforeDestroy() {
     this.clipboard.destroy();
   },
+  methods: {
+    triggerDeletion(url) {
+      EventBus.fire('delete-url', url);
+    }
+  }
 }
 </script>

@@ -1,21 +1,21 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <app-header />
+    <AppHeader />
 
     <section class="flex-grow">
-      <content-section>
+      <ContentSection>
         <slot />
-      </content-section>
+      </ContentSection>
     </section>
 
-    <app-footer />
+    <AppFooter />
   </div>
 </template>
 
 <script>
-import AppHeader from './Header';
-import AppFooter from './Footer';
-import ContentSection from '../components/ContentSection';
+import AppHeader from '@/layouts/Header';
+import AppFooter from '@/layouts/Footer';
+import ContentSection from '@/components/ContentSection';
 
 export default {
   name: "BaseLayout",
