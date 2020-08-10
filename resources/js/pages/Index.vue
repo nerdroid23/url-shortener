@@ -67,7 +67,7 @@ export default {
           const currentPage = parseInt(page);
 
           if (!data.data.length && currentPage > 1) {
-            this.$router.push({ name: 'dashboard', query: { page: (currentPage - 1) } });
+            this.$router.replace({ name: 'dashboard', query: { page: (currentPage - 1) } });
           }
 
           this.urls = data;
