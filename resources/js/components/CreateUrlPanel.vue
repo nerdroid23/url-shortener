@@ -179,8 +179,9 @@ export default {
       this.form
         .post(this.route('urls.store').url())
         .then(() => {
-          EventBus.fire('created-url');
           this.dismiss();
+          EventBus.fire('created-url');
+          EventBus.fire('notify', 'URL created successfully!');
         });
     }
   },

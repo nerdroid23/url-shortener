@@ -25,17 +25,16 @@
 
     <Portal selector="#portal-target">
       <DeleteUrlModal />
-
       <CreateUrlPanel />
     </Portal>
   </BaseLayout>
 </template>
 
 <script>
-import UrlsList from '@/components/UrlsList';
-import DeleteUrlModal from '@/components/DeleteUrlModal';
-import { Portal } from '@linusborg/vue-simple-portal';
 import BaseLayout from '@/layouts/BaseLayout';
+import UrlsList from '@/components/UrlsList';
+import { Portal } from '@linusborg/vue-simple-portal';
+import DeleteUrlModal from '@/components/DeleteUrlModal';
 import CreateUrlPanel from '@/components/CreateUrlPanel';
 
 export default {
@@ -64,7 +63,15 @@ export default {
 
       window.axios
         .get(this.route('urls.index', { page }).url())
-        .then(response => (this.urls = response.data));
+        .then(({ data }) => {
+          const currentPage = parseInt(page);
+
+          if (!data.data.length && currentPage > 1) {
+            this.$router.push({ name: 'dashboard', query: { page: (currentPage - 1) } });
+          }
+
+          this.urls = data;
+        });
     },
     openCreatePanel() {
       EventBus.fire('open-create-panel');

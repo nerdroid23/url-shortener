@@ -84,7 +84,8 @@
 </template>
 
 <script>
-import Icon from './Icon';
+import Icon from '@/components/Icon';
+
 export default {
   name: "DeleteUrlModal",
   components: { Icon },
@@ -111,8 +112,9 @@ export default {
       axios
         .delete(this.route('urls.destroy', this.urlToDelete.shortened_url).url())
         .then(() => {
-          EventBus.fire('deleted-url', this.urlToDelete);
           this.dismiss();
+          EventBus.fire('deleted-url', this.urlToDelete);
+          EventBus.fire('notify', 'URL deleted successfully!');
         });
     },
   },

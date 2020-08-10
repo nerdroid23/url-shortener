@@ -56,6 +56,7 @@
                   :href="url.redirect_path"
                   target="_blank"
                   class="flex"
+                  title="Click to open"
                 >
                   <span class="mr-3 text-gray-500 hover:text-gray-900">
                     <icon
@@ -66,6 +67,7 @@
                 </a>
 
                 <span
+                  title="Click to copy"
                   class="text-green-500 hover:text-green-900 cursor-pointer js-copy-to-clipboard"
                   v-text="url.shortened_url"
                 />
@@ -131,7 +133,6 @@ export default {
   data() {
     return {
       clipboard: null,
-      copied: false,
     };
   },
   computed: {
@@ -147,6 +148,9 @@ export default {
       text: function(trigger) {
         return trigger.nextElementSibling.innerHTML;
       }
+    }).on('success', function(e) {
+      EventBus.fire('notify', 'URL copied to your clipboard.');
+      e.clearSelection();
     });
   },
   beforeDestroy() {
