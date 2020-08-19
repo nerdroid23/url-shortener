@@ -1,4 +1,3 @@
-import 'alpinejs';
 import axios from 'axios';
 import EventBus from './Event';
 

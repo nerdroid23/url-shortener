@@ -15,18 +15,10 @@
   <!-- Styles -->
   <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
 
-  <!-- Scripts -->
-  <script>
-    window.loggedIn = @json(auth()->check());
-    window.user = @json(optional(auth()->user())->only(['name', 'email']));
-  </script>
   <script src="{{ url(mix('js/app.js')) }}" defer></script>
+  @routes
 </head>
-<body class="bg-gray-100">
-  <div id="app">
-    <app-component />
-  </div>
-
-  <div id="portal-target"></div>
+<body class="bg-gray-100 font-sans antialiased">
+  @inertia
 </body>
 </html>
